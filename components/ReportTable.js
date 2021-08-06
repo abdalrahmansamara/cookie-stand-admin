@@ -2,6 +2,8 @@ import React from 'react'
 import { If, Then, Else } from 'react-if'
 import data from '../helpers/data'
 function ReportTable(props) {
+  console.log(props.locations)
+  console.log('aaaaaaaaaaaa')
     return (
         <div className='flex justify-center'>
             <If condition={props.locations.length}>
@@ -17,13 +19,14 @@ function ReportTable(props) {
                 }
               </thead>
         {
+          
           props.locations.map((location,idx)=>{
             if (idx%2 == 0) {
               return(
                 <tr className='bg-gray-100 border-b border-gray-200 text-center bg-green-200'>
                   <td className='px-10 py-3 text-center'>{location.location}</td>
                   {
-                    location.stand.map(val=>{
+                    location.hourly_sales.map(val=>{
                       return(
                       <td className='px-4 py-3 text-center'>{val}</td>
                       )})
@@ -36,7 +39,7 @@ function ReportTable(props) {
                 <tr className='bg-gray-100 border-b border-gray-50 text-center bg-green-100'>
                   <td className='px-4 py-3 text-center'>{location.location}</td>
                   {
-                    location.stand.map(val=>{
+                    location.hourly_sales.map(val=>{
                       return(
                       <td className='px-4 py-3 text-center'>{val}</td>
                       )})
