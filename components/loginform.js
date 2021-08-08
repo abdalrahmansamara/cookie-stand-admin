@@ -7,7 +7,6 @@ function Loginform(props) {
     const [password, setPassword] = useState('')
     function submitHandler(e){
         e.preventDefault()
-        console.log('aaa')
         props.log({username:username, password:password})
     }
     function usernameChangeHandler(e){

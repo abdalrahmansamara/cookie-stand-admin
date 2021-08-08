@@ -3,18 +3,19 @@ import { If, Then, Else } from 'react-if'
 import data from '../helpers/data'
 
 function ReportTable(props) {
-  console.log(props.locations)
-  function handleDelete(e){
-    e.preventDefault()
-    id = e.target.name
+  function deletion(e){
+    // e.preventDefault
+    let id = e.target.name
+    console.log(id)
+    props.handleDelete(id)
+
   }
-  console.log('aaaaaaaaaaaa')
     return (
         <div className='flex justify-center'>
             <If condition={props.locations.length}>
           <Then>
             <table className='rounded-t-lg m-5 w-5/6 mx-auto bg-gray-200 text-gray-800 text-center'>
-              <thead className='text-left border-b-2 border-gray-300 bg-green-400 text-center'>
+              <thead key='head' className='text-left border-b-2 border-gray-300 bg-green-400 text-center'>
                 {
                   data.map(element=>{
                     return(
@@ -28,7 +29,7 @@ function ReportTable(props) {
           props.locations.map((location,idx)=>{
             if (idx%2 == 0) {
               return(
-                <tr className='bg-gray-100 border-b border-gray-200 text-center bg-green-200'>
+                <tr key={location.location} className='bg-gray-100 border-b border-gray-200 text-center bg-green-200'>
                   <td className='px-10 py-3 text-center'>{location.location}</td>
                   {
                     location.hourly_sales.map(val=>{
@@ -36,13 +37,13 @@ function ReportTable(props) {
                       <td className='px-4 py-3 text-center'>{val}</td>
                       )})
                   }
-                <td><button  name={location.id} onClick={props.handleDelete(location.id)}>X</button></td>
+                <td><button name={location.id} onClick={deletion}>X</button></td>
                 </tr>
               )
             }
             else {
               return(
-                <tr className='bg-gray-100 border-b border-gray-50 text-center bg-green-100'>
+                <tr key={location.location} className='bg-gray-100 border-b border-gray-50 text-center bg-green-100'>
                   <td className='px-4 py-3 text-center'>{location.location}</td>
                   {
                     location.hourly_sales.map(val=>{
@@ -50,7 +51,7 @@ function ReportTable(props) {
                       <td className='px-4 py-3 text-center'>{val}</td>
                       )})
                   }
-                                    <td><button  name={location.id} onClick={props.handleDelete(location.id)}>X</button></td>
+                                    <td><button  name={location.id} onClick={deletion}>X</button></td>
 
                 
                 </tr>
@@ -58,7 +59,7 @@ function ReportTable(props) {
             }
           })
         }
-        <tr className='text-left border-b-2 border-gray-300 text-center bg-green-400'>
+        <tr key='last' className='text-left border-b-2 border-gray-300 text-center bg-green-400'>
           <th className='px-4 py-3 text-center'>Totals</th>
         {
           props.sumOfSums.map(value=>{
