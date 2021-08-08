@@ -12,15 +12,16 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 
 function Cookiestand(props) {
-
+    let initialSum = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     const [locations, setLocations] = useState([])
-    const [sumOfSums, setSumOfSums] = useState([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
+    const [sumOfSums, setSumOfSums] = useState(initialSum)
 
     useEffect(() => {
-      if (props.token && sumOfSums[12] == 0){
+      if (props.token){
+        console.log('bbbbbbbbbbbbb')
         getDataFromAPI()
       }
-    }, [locations])
+    },[props.token])
 
     async function handleDelete(id){
       const config = { headers: { Authorization: "Bearer " + props.token } };
@@ -40,7 +41,7 @@ function Cookiestand(props) {
         arr.push(temp)
       })
       setLocations(arr)
-      sumOfSumsFirstSet()
+      sumOfSumsFirstSet(arr)
     }
 
     function sumTheArray(array){
@@ -55,15 +56,14 @@ function Cookiestand(props) {
       return array
     }
     // call it inside the useEffect at the last row
-    function sumOfSumsFirstSet(){
+    function sumOfSumsFirstSet(arr){
       let initial = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-      for(let i =0; i<locations.length; i++){
+      console.log( locations)
+      for(let i =0; i<arr.length; i++){
         for (let j=0; j<=14; j++){
-          initial[j]+= locations[i].hourly_sales[j]
+          initial[j]+= arr[i].hourly_sales[j]
         }
       }
-      console.log(locations)
-      console.log(initial)
       setSumOfSums(initial)
     }
 
@@ -83,11 +83,11 @@ function Cookiestand(props) {
         let max = Math.floor(event.target.max.value);
         let avg = event.target.avg.value
         let salesPerHour = []
-        let sum = 0
+        // let sum = 0
         for (let i=0; i<=13; i++){
           let val = Math.floor((Math.random() * (max - min + 1) + min)*avg)
           salesPerHour.push(val)
-          sum+=val
+          // sum+=val
         }
         // salesPerHour.push(sum)
         new_shop['hourly_sales'] = salesPerHour
