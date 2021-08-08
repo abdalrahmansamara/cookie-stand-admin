@@ -1,8 +1,13 @@
 import React from 'react'
 import { If, Then, Else } from 'react-if'
 import data from '../helpers/data'
+
 function ReportTable(props) {
   console.log(props.locations)
+  function handleDelete(e){
+    e.preventDefault()
+    id = e.target.name
+  }
   console.log('aaaaaaaaaaaa')
     return (
         <div className='flex justify-center'>
@@ -31,6 +36,7 @@ function ReportTable(props) {
                       <td className='px-4 py-3 text-center'>{val}</td>
                       )})
                   }
+                <td><button  name={location.id} onClick={props.handleDelete(location.id)}>X</button></td>
                 </tr>
               )
             }
@@ -44,6 +50,8 @@ function ReportTable(props) {
                       <td className='px-4 py-3 text-center'>{val}</td>
                       )})
                   }
+                                    <td><button  name={location.id} onClick={props.handleDelete(location.id)}>X</button></td>
+
                 
                 </tr>
               )
@@ -59,6 +67,7 @@ function ReportTable(props) {
             )
           })
         }
+        <td></td>
         </tr>
             </table>
           </Then>
