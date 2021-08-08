@@ -22,14 +22,20 @@ function Cookiestand(props) {
       }
     }, [locations])
 
+    async function handleDelete(id){
+      const config = { headers: { Authorization: "Bearer " + props.token } };
+      await axios.delete(`https://cookie-stand-api.herokuapp.com/api/v1/cookie-stands/${id}`,config);
+      getDataFromAPI()
+    }
+
     async function getDataFromAPI(){
       const config = {headers: {'Authorization': 'Bearer ' + props.token}};
       let shops = await axios.get(props.postsUrl, config)
       let arr = []
-      console.log(shops.data)
       shops.data.forEach(shop=>{
         let temp = {}
         temp.location = shop.location
+        temp.id = shop.id
         temp.hourly_sales = sumTheArray(shop.hourly_sales)
         arr.push(temp)
       })
@@ -61,10 +67,16 @@ function Cookiestand(props) {
       setSumOfSums(initial)
     }
 
-      function submit_handler(event){
+      async function submit_handler(event){
         event.preventDefault()
         let new_shop = {
           location: event.target.loc.value,
+          description: 'No description',
+          hourly_sales: [],
+          minimum_customers_per_hour: Math.ceil(event.target.min.value),
+          maximum_customers_per_hour: Math.floor(event.target.max.value),
+          average_cookies_per_sale: event.target.avg.value,
+          owner: 1,
         }
         // get the values for the table
         let min = Math.ceil(event.target.min.value);
@@ -77,18 +89,23 @@ function Cookiestand(props) {
           salesPerHour.push(val)
           sum+=val
         }
-        salesPerHour.push(sum)
+        // salesPerHour.push(sum)
         new_shop['hourly_sales'] = salesPerHour
-        console.log(new_shop)
+        // console.log(new_shop)
         // reset the input fields
         document.querySelectorAll('input').forEach(element=>{
           element.value = ''
         })
-        setLocations([...locations, new_shop])
-        setSumOfSums(sumOfSums.map(function (num, idx) {
-          return num + salesPerHour[idx];
-        }))
+
+        // setLocations([...locations, new_shop])
+        // setSumOfSums(sumOfSums.map(function (num, idx) {
+        //   return num + salesPerHour[idx];
+        // }))
+        const config = { headers: { Authorization: "Bearer " + props.token } };
+        await axios.post("https://cookie-stand-api.herokuapp.com/api/v1/cookie-stands/",new_shop,config);
+        getDataFromAPI()
       }
+
     return (
       <div className = 'flex-col flex bg-gray-100'>
         <Head>
@@ -107,7 +124,7 @@ function Cookiestand(props) {
           </div>
   
   
-          <ReportTable locations={locations} sumOfSums={sumOfSums} />
+          <ReportTable locations={locations} sumOfSums={sumOfSums} handleDelete={handleDelete}/>
           <br></br>
           <br></br>
         </main>
